@@ -63,15 +63,15 @@
     <header>
       <div class="logo">G♡</div>
       <div>
-        <h1>Goomaral-д зориулсан 18 насны захиа</h1>
-        <p class="lead">🎀 Гоо д зориулж Эрхэс захиа бичсэн байгаа шүү</p>
+        <h1>Goomaral-д зориулсан гэнэтийн бэлэг</h1>
+        <p class="lead">🎀 Romantic • Cute • Lofi — 2026-10-17-нд нээгдэх</p>
       </div>
     </header>
 
     <!-- LOCKED view -->
     <div id="locked" class="locked">
       <div style="text-align:center">
-        <strong style="font-size:18px">⏳ Энэ хуудас 2026.10.17-нд нээгдэнэ</strong>
+        <strong style="font-size:18px">⏳ Энэ хуудас 2026-10-17-нд нээгдэнэ</strong>
         <div class="countdown" id="countdown">
           <div class="cd-item"><div class="num" id="cd-days">--</div><div class="lbl">өдөр</div></div>
           <div class="cd-item"><div class="num" id="cd-hours">--</div><div class="lbl">цаг</div></div>
@@ -81,23 +81,23 @@
       </div>
 
       <div style="margin-top:14px">
-        <div class="small"> 18 насны төрсөн өдөрт нь зориулж бичсэн юм шүү</div>
+        <div class="small">Хэн нэгэн одоо мэндчилгээ бичиж хадгалж болно — хуудас нээгдсэн үед тэр мессеж автоматаар харагдана.</div>
 
         <div class="inputs" style="margin-top:10px">
           <div class="col">
-            <label>Надад бас бичээрэй (Би ч бас 2027.10.17 нд унших болно.)</label>
-            <textarea id="guestMessage" rows="3" placeholder=Надад заавал бичээрэй"></textarea>
+            <label>Таны мэндчилгээ (Goomaral-д зориулсан богино үг)</label>
+            <textarea id="guestMessage" rows="3" placeholder="Жишээ: Амжилт, хайр, инээмсэглэл..."></textarea>
           </div>
 
           <div style="width:220px">
             <label>Зураг оруулах (хамгийн их 5)</label>
             <input id="imageInput" type="file" accept="image/*" multiple>
-            <div class="small">Upload-с зургуудаа оруулна уу. (Тодруулга: Чи үнэхээр хөөрхөн байна )</div>
+            <div class="small">Upload-с зургуудаа оруулна уу. (Тодруулга: энэ нь таны браузер дээр л хадгалагдана)</div>
           </div>
         </div>
 
         <div style="display:flex;gap:10px;margin-top:12px">
-          <button id="saveBtn" class="btn">💾 Мессеж & зураг хадгалах</button>
+          <button id="saveBtn" class="btn">💾 Мес��еж & зураг хадгалах</button>
           <button id="clearBtn" class="btn" style="background:#aaa">🗑 Цэвэрлэх</button>
         </div>
         <div id="saveStatus" class="small" style="margin-top:8px;color:green"></div>
@@ -112,7 +112,7 @@
         <div class="left">
           <div class="message-box">
             <h2>🎂 Happy Birthday, Goomaral 💕</h2>
-            <p style="margin:6px 0 0;color:var(--muted)">Гоо маань аз жаргалтай байгаарай 🍀</p>
+            <p style="margin:6px 0 0;color:var(--muted)">Чамайг инээмсэглэл, хайр, аз жаргалаар дүүрэн өдөр угтаасай ✨</p>
 
             <div class="reveal">
               <div id="secret" class="secret" style="margin-top:12px">🔒 Нууц мессеж хаалттай байна</div>
@@ -147,10 +147,46 @@
     <footer>Энэхүү хуудас нь таны браузер дээр мессеж/зурагыг түр хадгалдаг (сэрвэргүй). Хэрвээ та нийтэд ил болгохыг хүсвэл GitHub Pages эсвэл Netlify дээр байрлуулж, бусдад линк явуулна.</footer>
   </div>
 
+  <!-- Firebase SDKs (compat for simpler code) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
 <script>
 /* ========== Settings ========== */
 const unlockDate = new Date("2026-10-17T00:00:00"); // local time
 const STORAGE_KEY = "goomaral_bday_v1";
+
+/* ========== Firebase config (REPLACE with your project's config) ==========
+  1) Create a Firebase project at https://console.firebase.google.com/
+  2) Enable Firestore (database) and Storage
+  3) Copy the web app config and paste below. Example keys shown as placeholders.
+============================================================================= */
+const FIREBASE_CONFIG = {
+  apiKey: "API_KEY",
+  authDomain: "PROJECT_ID.firebaseapp.com",
+  projectId: "PROJECT_ID",
+  storageBucket: "PROJECT_ID.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
+};
+
+let firebaseApp = null;
+let firestore = null;
+let storage = null;
+
+function isFirebaseConfigured(){
+  return FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.apiKey !== "API_KEY";
+}
+
+function initFirebase(){
+  if(!isFirebaseConfigured()) return false;
+  if(firebaseApp) return true;
+  firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+  firestore = firebase.firestore();
+  storage = firebase.storage();
+  return true;
+}
 
 /* ========== Countdown ========== */
 function pad(n){return n<10?("0"+n):n}
@@ -178,7 +214,7 @@ function updateCountdown(){
 const cdInterval = setInterval(updateCountdown, 500);
 updateCountdown();
 
-/* ========== Save guest message & images to localStorage ========== */
+/* ========== Save guest message & images (localStorage or Firebase) ========== */
 const saveBtn = document.getElementById("saveBtn");
 const clearBtn = document.getElementById("clearBtn");
 const guestMessageEl = document.getElementById("guestMessage");
@@ -188,35 +224,64 @@ const saveStatus = document.getElementById("saveStatus");
 saveBtn.addEventListener("click", async ()=>{
   const msg = guestMessageEl.value.trim();
   const files = Array.from(imageInput.files || []);
-  // read images as data URLs (limit to 5)
-  const images = [];
-  for(let i=0;i<Math.min(files.length,5);i++){ 
-    const f = files[i];
-    if(!f.type.startsWith("image/")) continue;
-    const data = await readFileAsDataURL(f);
-    images.push(data);
+
+  if(isFirebaseConfigured()){
+    initFirebase();
+    saveStatus.textContent = "⏳ Firebase руу илгээж байна...";
+    try{
+      await saveToFirebase(msg, files);
+      saveStatus.textContent = "✅ Хадгалсан (Firebase)!";
+    }catch(e){
+      console.error(e);
+      saveStatus.textContent = "❌ Firebase-д хадгалах үед алдаа гарлаа, localStorage-д хадгална.";
+      saveLocally(msg, files);
+    }
+  } else {
+    saveLocally(msg, files);
+    saveStatus.textContent = "✅ Хадгалсан! (Local only)";
   }
-  // load old
-  let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  if(!data.messages) data.messages = [];
-  if(msg) data.messages.push({text: msg, at: new Date().toISOString()});
-  // append images
-  if(!data.images) data.images = [];
-  data.images = data.images.concat(images).slice(0,5); // keep up to 5
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  saveStatus.textContent = "✅ Хадгалсан! (Хуудас нээгдсэн үед харагдана)";
+
   setTimeout(()=>saveStatus.textContent="",3000);
   guestMessageEl.value = "";
   imageInput.value = "";
 });
 
 clearBtn.addEventListener("click", ()=>{
-  if(confirm("Та жинхэнэ local хадгалсан өгөгдлөө устгахдаа итгэлтэй байна уу?")){
+  if(confirm("Та жинхэнэ local хадгалсан өгөгдлөө устгахдаа итгэлтэй байна уу?")){ 
     localStorage.removeItem(STORAGE_KEY);
     saveStatus.textContent = "🗑 Устгасан";
     setTimeout(()=>saveStatus.textContent="",2000);
   }
 });
+
+function saveLocally(msg, files){
+  const images = [];
+  const readerPromises = files.slice(0,5).map(f=>readFileAsDataURL(f));
+  return Promise.all(readerPromises).then(results=>{
+    let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    if(!data.messages) data.messages = [];
+    if(msg) data.messages.push({text: msg, at: new Date().toISOString()});
+    if(!data.images) data.images = [];
+    data.images = data.images.concat(results).slice(0,5);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  });
+}
+
+async function saveToFirebase(msg, files){
+  // upload images to Storage and collect URLs
+  const imageUrls = [];
+  for(let i=0;i<Math.min(files.length,5);i++){
+    const f = files[i];
+    if(!f.type.startsWith('image/')) continue;
+    // convert file to blob (it already is a Blob), upload
+    const path = `images/${Date.now()}_${Math.random().toString(36).slice(2,8)}_${f.name}`;
+    const snap = await storage.ref(path).put(f);
+    const url = await snap.ref.getDownloadURL();
+    imageUrls.push(url);
+  }
+  // write message doc
+  await firestore.collection('messages').add({ text: msg || '', images: imageUrls, at: firebase.firestore.FieldValue.serverTimestamp() });
+}
 
 function readFileAsDataURL(file){
   return new Promise((res,rej)=>{
@@ -260,47 +325,81 @@ function startHearts(){ heartInt = setInterval(spawnHeart, 400); }
 function stopHearts(){ clearInterval(heartInt); }
 
 // show content
-function showContent(){
+async function showContent(){
   lockedEl.style.display = "none";
   contentEl.style.display = "block";
   // play music (try)
   music.play().catch(()=>{ /* autoplay block possible; user can press button */ });
 
-  // load data
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  // messages
-  guestList.innerHTML = "";
-  if(data.messages && data.messages.length){
-    data.messages.forEach(m=>{
-      const d = document.createElement("div");
-      d.style.padding="8px"; d.style.borderBottom="1px solid #faf0f7";
-      d.innerHTML = `<strong style=\"color:var(--accent)\">${new Date(m.at).toLocaleString()}</strong><div style=\"margin-top:6px;color:#333\">${escapeHtml(m.text)}</div>`;
-      guestList.appendChild(d);
-    });
+  // if firebase configured, init and load from Firestore
+  if(isFirebaseConfigured()){
+    initFirebase();
+    // load messages from Firestore
+    guestList.innerHTML = "";
+    try{
+      const snap = await firestore.collection('messages').orderBy('at','asc').get();
+      if(!snap.empty){
+        snap.forEach(doc=>{
+          const m = doc.data();
+          const d = document.createElement('div');
+          d.style.padding='8px'; d.style.borderBottom='1px solid #faf0f7';
+          const ts = m.at && m.at.toDate ? m.at.toDate().toLocaleString() : '';
+          d.innerHTML = `<strong style="color:var(--accent)">${ts}</strong><div style="margin-top:6px;color:#333">${escapeHtml(m.text||'')}</div>`;
+          // images
+          if(m.images && m.images.length){
+            const imgsWrap = document.createElement('div');
+            imgsWrap.style.display='flex'; imgsWrap.style.gap='8px'; imgsWrap.style.marginTop='8px';
+            m.images.forEach(url=>{
+              const im = document.createElement('img'); im.src = url; im.className='thumb'; im.style.width='72px'; im.style.height='52px'; im.style.borderRadius='6px'; im.style.objectFit='cover';
+              imgsWrap.appendChild(im);
+            });
+            d.appendChild(imgsWrap);
+          }
+          guestList.appendChild(d);
+        });
+      } else {
+        guestList.innerHTML = `<div class="small" style="color:var(--muted)">Одоогоор мессеж байхгүй</div>`;
+      }
+    }catch(e){
+      console.error('Firestore load error', e);
+      guestList.innerHTML = `<div class="small" style="color:var(--muted)">Одоогоор мессеж байхгүй (FireStore-д холбогдоход алдаа гарлаа)</div>`;
+    }
   } else {
-    guestList.innerHTML = `<div class=\"small\" style=\"color:var(--muted)\">Одоогоор мессеж байхгүй</div>`;
-  }
+    // load from localStorage
+    const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    guestList.innerHTML = "";
+    if(data.messages && data.messages.length){
+      data.messages.forEach(m=>{
+        const d = document.createElement("div");
+        d.style.padding="8px"; d.style.borderBottom="1px solid #faf0f7";
+        d.innerHTML = `<strong style="color:var(--accent)">${new Date(m.at).toLocaleString()}</strong><div style="margin-top:6px;color:#333">${escapeHtml(m.text)}</div>`;
+        guestList.appendChild(d);
+      });
+    } else {
+      guestList.innerHTML = `<div class="small" style="color:var(--muted)">Одоогоор мессеж байхгүй</div>`;
+    }
 
-  // images to carousel
-  const imgs = (data.images || []);
-  const carouselImg = document.getElementById("carouselImg");
-  const thumbs = document.getElementById("thumbs");
-  thumbs.innerHTML = "";
-  if(imgs.length){
-    let idx = 0;
-    carouselImg.src = imgs[idx];
-    imgs.forEach((src,i)=>{
-      const t = document.createElement("img");
-      t.src = src; t.className="thumb"; t.style.width="72px"; t.style.height="52px"; t.style.borderRadius="6px";
-      t.style.objectFit="cover"; t.style.cursor="pointer";
-      t.addEventListener("click", ()=>{ idx = i; carouselImg.src = imgs[idx]; });
-      thumbs.appendChild(t);
-    });
-    document.getElementById("prev").onclick = ()=>{ idx = (idx-1+imgs.length)%imgs.length; carouselImg.src = imgs[idx]; }
-    document.getElementById("next").onclick = ()=>{ idx = (idx+1)%imgs.length; carouselImg.src = imgs[idx]; }
-  } else {
-    carouselImg.src = "";
-    document.getElementById("carousel").innerHTML = `<div style=\"color:var(--muted)\">Оруулсан зураг алга</div>`;
+    // images to carousel
+    const imgs = (data.images || []);
+    const carouselImg = document.getElementById("carouselImg");
+    const thumbs = document.getElementById("thumbs");
+    thumbs.innerHTML = "";
+    if(imgs.length){
+      let idx = 0;
+      carouselImg.src = imgs[idx];
+      imgs.forEach((src,i)=>{
+        const t = document.createElement("img");
+        t.src = src; t.className="thumb"; t.style.width="72px"; t.style.height="52px"; t.style.borderRadius="6px";
+        t.style.objectFit="cover"; t.style.cursor="pointer";
+        t.addEventListener("click", ()=>{ idx = i; carouselImg.src = imgs[idx]; });
+        thumbs.appendChild(t);
+      });
+      document.getElementById("prev").onclick = ()=>{ idx = (idx-1+imgs.length)%imgs.length; carouselImg.src = imgs[idx]; }
+      document.getElementById("next").onclick = ()=>{ idx = (idx+1)%imgs.length; carouselImg.src = imgs[idx]; }
+    } else {
+      carouselImg.src = "";
+      document.getElementById("carousel").innerHTML = `<div style="color:var(--muted)">Оруулсан зураг алга</div>`;
+    }
   }
 
   // reveal button action
@@ -321,7 +420,7 @@ function showContent(){
 
 /* ========== Utility ========== */
 function escapeHtml(unsafe) {
-  return unsafe.replace(/[&<"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','"':'&quot;',"'":'&#039;'}[m]); });
+  return unsafe.replace(/[&<"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','"':'&quot;','\'':'&#039;'}[m]); });
 }
 
 /* If already past unlock when page loads */
