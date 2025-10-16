@@ -63,8 +63,8 @@
     <header>
       <div class="logo">G♡</div>
       <div>
-        <h1>Goomaral-д зориулсан 18 насны захиа</h1>
-        <p class="lead">🎀 Гоо д зориулж Эрхэс захиа бичсэн байгаа шүү</p>
+        <h1>Goomaral-д зориулсан захиа </h1>
+        <p class="lead">🎀 18 настай Гоомаралд зориулав </p>
       </div>
     </header>
 
@@ -81,18 +81,18 @@
       </div>
 
       <div style="margin-top:14px">
-        <div class="small"> 18 насны төрсөн өдөрт нь зориулж бичсэн юм шүү</div>
+        <div class="small">Гоо маань чигсэн захиа бичээрэй — хуудас нээгдсэн үед тэр мессеж автоматаар харагдана.</div>
 
         <div class="inputs" style="margin-top:10px">
           <div class="col">
-            <label>Надад бас бичээрэй (Би ч бас 2027.10.17 нд унших болно.)</label>
-            <textarea id="guestMessage" rows="3" placeholder=Надад заавал бичээрэй"></textarea>
+            <label>Надад зориулж бичээрэй  (Би ч гэсэн уншина аа )</label>
+            <textarea id="guestMessage" rows="3" placeholder="Гоо: Хөөрхөн ухаалаг мундаг..."></textarea>
           </div>
 
           <div style="width:220px">
             <label>Зураг оруулах (хамгийн их 5)</label>
             <input id="imageInput" type="file" accept="image/*" multiple>
-            <div class="small">Upload-с зургуудаа оруулна уу. (Тодруулга: Чи үнэхээр хөөрхөн байна )</div>
+            <div class="small">Upload-с зургуудаа оруулна уу. (Тодруулга: Гоо үнэхээр хөөрхөн байна)</div>
           </div>
         </div>
 
@@ -112,7 +112,7 @@
         <div class="left">
           <div class="message-box">
             <h2>🎂 Happy Birthday, Goomaral 💕</h2>
-            <p style="margin:6px 0 0;color:var(--muted)">Гоо маань аз жаргалтай байгаарай 🍀</p>
+            <p style="margin:6px 0 0;color:var(--muted)">Гоо минь Аз жаргалтай хайр энэрлээр дүүрэн байгаасай🍀 ✨</p>
 
             <div class="reveal">
               <div id="secret" class="secret" style="margin-top:12px">🔒 Нууц мессеж хаалттай байна</div>
@@ -190,7 +190,7 @@ saveBtn.addEventListener("click", async ()=>{
   const files = Array.from(imageInput.files || []);
   // read images as data URLs (limit to 5)
   const images = [];
-  for(let i=0;i<Math.min(files.length,5);i++){ 
+  for(let i=0;i<Math.min(files.length,5);i++){
     const f = files[i];
     if(!f.type.startsWith("image/")) continue;
     const data = await readFileAsDataURL(f);
@@ -274,11 +274,11 @@ function showContent(){
     data.messages.forEach(m=>{
       const d = document.createElement("div");
       d.style.padding="8px"; d.style.borderBottom="1px solid #faf0f7";
-      d.innerHTML = `<strong style=\"color:var(--accent)\">${new Date(m.at).toLocaleString()}</strong><div style=\"margin-top:6px;color:#333\">${escapeHtml(m.text)}</div>`;
+      d.innerHTML = `<strong style="color:var(--accent)">${new Date(m.at).toLocaleString()}</strong><div style="margin-top:6px;color:#333">${escapeHtml(m.text)}</div>`;
       guestList.appendChild(d);
     });
   } else {
-    guestList.innerHTML = `<div class=\"small\" style=\"color:var(--muted)\">Одоогоор мессеж байхгүй</div>`;
+    guestList.innerHTML = `<div class="small" style="color:var(--muted)">Одоогоор мессеж байхгүй</div>`;
   }
 
   // images to carousel
@@ -300,7 +300,7 @@ function showContent(){
     document.getElementById("next").onclick = ()=>{ idx = (idx+1)%imgs.length; carouselImg.src = imgs[idx]; }
   } else {
     carouselImg.src = "";
-    document.getElementById("carousel").innerHTML = `<div style=\"color:var(--muted)\">Оруулсан зураг алга</div>`;
+    document.getElementById("carousel").innerHTML = `<div style="color:var(--muted)">Оруулсан зураг алга</div>`;
   }
 
   // reveal button action
